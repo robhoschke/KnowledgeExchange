@@ -8,6 +8,7 @@ source("Rscripts/likertdata_import_filter.R")
 
 str(combined_data)
 
+colnames(combined_data)
 negative_columns <- c(21, 23, 24, 26, 28, 30, 32, 33, 36, 39, 40, 42)
 
 
