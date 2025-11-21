@@ -56,6 +56,8 @@ ggplot(inst_summary, aes(x=institution, y=rowmeans) ) +
   geom_boxplot()
 
 
+
+######plot
 ###merge df's
 
 merged_df <- data.frame(
@@ -66,15 +68,8 @@ merged_df <- data.frame(
   valid_mean = valid_summary$rowmeans
 )
 
-ggplot(merged_df, aes(x=institution, y=rowmeans) ) +
-  geom_boxplot()
 
 
-
-###plot
-
-library(ggplot2)
-library(reshape2)
 
 # Melt the data
 merged_long <- melt(merged_df, 
@@ -82,105 +77,137 @@ merged_long <- melt(merged_df,
                     variable.name = "barrier",
                     value.name = "score")
 
-# rename and Create boxplot
+
+merged_long$barrier <- factor(merged_long$barrier, 
+                              levels = c("comm_mean","trust_mean", "inst_mean","valid_mean"))
 
 
-ggplot(merged_long, aes(x = barrier, y = score, fill = institution)) +
+ggplot(merged_long, aes(x = score, y = barrier, fill = institution)) +
   geom_boxplot() +
-  coord_flip() +
-  scale_fill_manual(values = c("marine_scientists" = "#D8B365", 
-                               "fisheries_scientists" = "#5AB4AC")) +
-  labs(title = "Comparison of Barriers by Institution",
-       x = "Barrier Type",
-       y = "Mean Score",
-       fill = "Institution") +
-  theme_minimal()
+  scale_y_discrete(labels = c(
+    "inst_mean" = "Institutional",
+    "comm_mean" = "Communication",
+    "trust_mean" = "Trust",
+    "valid_mean" = "Legitimacy and credibility"
+  )) +
+  scale_fill_manual(
+    name = "Management proximity",
+    values = c("fisheries_scientists" = "#7FA67E", 
+               "marine_scientists" = "#8F7FA6"),
+    labels = c("fisheries_scientists" = "High", 
+               "marine_scientists" = "Low"),
+  ) +
+  guides(fill = guide_legend(reverse = TRUE))+
+  labs(
+    x = "Mean Score",
+    y = "Barrier Type"
+  ) +
+  theme_minimal(base_size = 20)+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
 
 
 
 
 
-
-# Relevel institution so fisheries_scientists (High) comes first
-merged_long$institution <- factor(merged_long$institution, 
-                                  levels = c("fisheries_scientists", "marine_scientists"))
-
-# Relevel barrier to set custom order
-merged_long$barrier <- factor(merged_long$barrier,
-                              levels = c("inst_mean", "comm_mean", "trust_mean", "valid_mean"),
-                              labels = c("Institutional", "Communication", "Trust", "Legitimacy and credibility"))
-
-# Create horizontal boxplot
-ggplot(merged_long, aes(x = barrier, y = score, fill = institution)) +
-  geom_boxplot() +
-  coord_flip() +
-  scale_fill_manual(values = c("fisheries_scientists" = "#5AB4AC",
-                               "marine_scientists" = "#D8B365"),
-                    labels = c("High", "Low")) +
-  labs(title = "Comparison of Barriers by Institution",
-       x = "Barrier Type",
-       y = "Mean Score",
-       fill = "Management proximity") +
-  theme_minimal()
+###
+###### stats tests 
 
 
+barrier_dfs <- list(
+  inst = inst_summary,
+  legit = valid_summary,
+  comm = comm_summary,
+  trust = trust_summary
+)
 
 
-
-###t-tests
-
-##institution
-
-str(inst_summary)
-t_test_result <- t.test(rowmeans ~ institution, data = inst_summary)
-
-
-welch_result <- t.test(rowmeans ~ institution, 
-                       data = inst_summary, 
-                       var.equal = FALSE)
-
-print(welch_result)
-
-
-##legit
-
-str(valid_summary)
-t_test_result <- t.test(rowmeans ~ institution, data = valid_summary)
-
-
-welch_result <- t.test(rowmeans ~ institution, 
-                       data = valid_summary, 
-                       var.equal = FALSE)
-
-print(welch_result)
-
-##comm
-
-str(comm_summary)
-t_test_result <- t.test(rowmeans ~ institution, data = comm_summary)
+extract_stats <- function(barrier_name, df) {
+  test <- t.test(rowmeans ~ institution, data = df, var.equal = FALSE)
+  
+  means <- tapply(df$rowmeans, df$institution, mean)
+  sds <- tapply(df$rowmeans, df$institution, sd)
+  ns <- tapply(df$rowmeans, df$institution, length)
+  
+  # Calculate pooled standard deviation
+  pooled_sd <- sqrt(((ns["fisheries_scientists"] - 1) * sds["fisheries_scientists"]^2 + 
+                       (ns["marine_scientists"] - 1) * sds["marine_scientists"]^2) / 
+                      (ns["fisheries_scientists"] + ns["marine_scientists"] - 2))
+  
+  # Calculate Cohen's d
+  cohens_d <- (means["fisheries_scientists"] - means["marine_scientists"]) / pooled_sd
+  
+  data.frame(
+    barrier = barrier_name,
+    fisheries_mean = means["fisheries_scientists"],
+    marine_mean = means["marine_scientists"],
+    difference = means["fisheries_scientists"] - means["marine_scientists"],
+    cohens_d = cohens_d,
+    t_statistic = test$statistic,
+    df = test$parameter,
+    p_value = test$p.value,
+    ci_lower = test$conf.int[1],
+    ci_upper = test$conf.int[2]
+  )
+}
 
 
-welch_result <- t.test(rowmeans ~ institution, 
-                       data = comm_summary, 
-                       var.equal = FALSE)
+# Apply to all dataframes
+results_table <- map2_df(names(barrier_dfs), barrier_dfs, extract_stats)
 
-print(welch_result)
+print(results_table)
 
-##trust
-
-str(trust_summary)
-t_test_result <- t.test(rowmeans ~ institution, data = trust_summary)
+# Export if needed
+write.csv(results_table, "ttests_results.csv", row.names = FALSE)
 
 
-welch_result <- t.test(rowmeans ~ institution, 
-                       data = trust_summary, 
-                       var.equal = FALSE)
+##
+####
+##### wilcox test 
 
-print(welch_result)
+barrier_dfs <- list(
+  inst = inst_summary,
+  legit = valid_summary,
+  comm = comm_summary,
+  trust = trust_summary
+)
 
+extract_stats <- function(barrier_name, df) {
+  # Wilcoxon rank-sum test (Mann-Whitney U)
+  test <- wilcox.test(rowmeans ~ institution, data = df, exact = FALSE)
+  
+  # Calculate summary statistics
+  means <- tapply(df$rowmeans, df$institution, mean)
+  medians <- tapply(df$rowmeans, df$institution, median)
+  sds <- tapply(df$rowmeans, df$institution, sd)
+  ns <- tapply(df$rowmeans, df$institution, length)
+  
+  # Calculate rank-biserial correlation (effect size for Mann-Whitney)
+  # This is the non-parametric equivalent of Cohen's d
+  r_rank_biserial <- 1 - (2 * test$statistic) / (ns["fisheries_scientists"] * ns["marine_scientists"])
+  
+  data.frame(
+    barrier = barrier_name,
+    fisheries_mean = means["fisheries_scientists"],
+    marine_mean = means["marine_scientists"],
+    fisheries_median = medians["fisheries_scientists"],
+    marine_median = medians["marine_scientists"],
+    fisheries_sd = sds["fisheries_scientists"],
+    marine_sd = sds["marine_scientists"],
+    W_statistic = test$statistic,
+    p_value = test$p.value,
+    rank_biserial_r = r_rank_biserial
+  )
+}
 
+# Apply to all dataframes
+results_table <- map2_df(names(barrier_dfs), barrier_dfs, extract_stats)
+print(results_table)
 
-
+# Optional: Format for cleaner display
+results_table %>%
+  mutate(across(c(fisheries_mean:marine_sd, rank_biserial_r), ~round(., 3)),
+         p_value = round(p_value, 4))
 
 
 
