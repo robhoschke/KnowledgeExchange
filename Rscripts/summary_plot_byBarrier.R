@@ -1,6 +1,7 @@
 #### summary plot
-##run data filter, convert to possitive, and first section in data vis by theme
+##run data filter, convert to positive, and first section in data vis by theme
 
+library(reshape2)
 
 trust 
 valid_knowledge 
@@ -92,8 +93,8 @@ ggplot(merged_long, aes(x = score, y = barrier, fill = institution)) +
   )) +
   scale_fill_manual(
     name = "Management proximity",
-    values = c("fisheries_scientists" = "#7FA67E", 
-               "marine_scientists" = "#8F7FA6"),
+    values = c("fisheries_scientists" = "#e8e64d", 
+               "marine_scientists" = "#d9927e"),
     labels = c("fisheries_scientists" = "High", 
                "marine_scientists" = "Low"),
   ) +
@@ -102,9 +103,14 @@ ggplot(merged_long, aes(x = score, y = barrier, fill = institution)) +
     x = "Mean Score",
     y = "Barrier Type"
   ) +
-  theme_minimal(base_size = 20)+
-  theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank())
+
+theme_bw(base_size = 20) + 
+  theme(
+    panel.grid.major = element_blank(), 
+    panel.grid.minor = element_blank(),
+    axis.text.y = element_text(size = 20),
+    axis.title.x = element_text(size = 16)
+  )
 
 
 

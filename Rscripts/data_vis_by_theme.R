@@ -91,7 +91,7 @@ p_fishsc <- p_fish +
         axis.text.y = element_text(size=25),
         axis.text.x = element_text(size=18),
         title = element_text (size = 25)) +
-  labs(title = "Fisheries Scientists")
+  labs(title = "High proximity")
 
 
 p_marinesc  <- p_marine + 
@@ -101,7 +101,7 @@ p_marinesc  <- p_marine +
         title = element_text(size = 25),
         plot.margin = margin(5.5, 5.5, 250, 5.5, "pt"),
         legend.position = "none") +
-  labs(title = "Marine Scientists")
+  labs(title = "Low proximity")
 
 
 
@@ -150,7 +150,7 @@ p_fishsc <- p_fish +
         axis.text.y = element_text(size=25),
         axis.text.x = element_text(size=18),
         title = element_text (size = 25)) +
-  labs(title = "Fisheries Scientists")
+  labs(title = "High proximity")
 
 
 p_marinesc  <- p_marine + 
@@ -160,7 +160,7 @@ p_marinesc  <- p_marine +
         title = element_text(size = 25),
         plot.margin = margin(5.5, 5.5, 250, 5.5, "pt"),
         legend.position = "none") +
-  labs(title = "Marine Scientists")
+  labs(title = "Low proximity")
 
 
 ##combine plots
@@ -222,7 +222,7 @@ p_fishsc <- p_fish +
         axis.text.y = element_text(size=25),
         axis.text.x = element_text(size=18),
         title = element_text (size = 25)) +
-  labs(title = "Fisheries Scientists")
+  labs(title = "High proximity")
 
 
 p_marinesc  <- p_marine + 
@@ -232,7 +232,7 @@ p_marinesc  <- p_marine +
         title = element_text(size = 25),
         plot.margin = margin(5.5, 5.5, 250, 5.5, "pt"),
         legend.position = "none") +
-  labs(title = "Marine Scientists")
+  labs(title = "Low proximity")
 
 
 ##combine plots 
@@ -283,7 +283,7 @@ p_fishsc <- p_fish +
         axis.text.y = element_text(size=25),
         axis.text.x = element_text(size=18),
         title = element_text (size = 25)) +
-  labs(title = "Fisheries Scientists")
+  labs(title = "High proximity")
 
 
 p_marinesc  <- p_marine + 
@@ -293,7 +293,7 @@ p_marinesc  <- p_marine +
         title = element_text(size = 25),
         plot.margin = margin(5.5, 5.5, 250, 5.5, "pt"),
         legend.position = "none") +
-  labs(title = "Marine Scientists")
+  labs(title = "Low proximity")
 
 
 ##combine plots 
