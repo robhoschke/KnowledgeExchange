@@ -11,7 +11,8 @@ library(likert)
 
 file_paths <- c(
   "data/Fishers+knowledge+in+research_+DBCA_June+19,+2025_15.10.csv",
-  "data/Fishers+knowledge+in+research_+DPIRD_June+19,+2025_15.11.csv",  
+  "data/Fishers+knowledge+in+research_+DPIRD_no_pilot.csv",
+  # "data/Fishers+knowledge+in+research_+DPIRD_June+19,+2025_15.11.csv",  
   "data/Fishers+knowledge+in+research_+non-gov_July+1,+2025_13.57.csv" 
 )
 

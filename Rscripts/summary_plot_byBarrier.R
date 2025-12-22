@@ -2,6 +2,7 @@
 ##run data filter, convert to positive, and first section in data vis by theme
 
 library(reshape2)
+packageVersion("ggplot2")
 
 trust 
 valid_knowledge 
@@ -11,7 +12,7 @@ institutional_resourcing
 ## valid_knwoeldge
 
 str(valid_knowledge)
-colnames(valid_knowledg)
+colnames(valid_knowledge)
 
 valid_knowledge <- valid_knowledge %>%
   mutate(across(2:3, as.numeric))
@@ -115,8 +116,52 @@ theme_bw(base_size = 20) +
 
 
 
+##
+####
+####### add arrows
 
-###
+ggplot(merged_long, aes(x = score, y = barrier, fill = institution)) +
+  geom_boxplot() +
+  stat_summary(fun = mean, geom = "point", 
+               shape = 23, size = 4, 
+               fill = "lightblue",
+               aes(group = institution),
+               position = position_dodge(width = 0.75)) +
+  # annotate("segment", x = 1, xend = 11, y = 4.4, yend = 4.4,
+  #          arrow = arrow(ends = "both", length = unit(0.3, "cm")), col = "darkgray",
+  #          linewidth = 0.5) +
+  annotate("text", x = 1, y = 0.5, label = "Strong barriers",
+           hjust = 0, size = 7, col = "darkred") +
+  annotate("text", x = 11, y = 0.5, label = "No barriers",
+           hjust = 1, size = 7, col = "darkgreen") +
+  scale_x_continuous(breaks = 1:11, limits = c(1, NA)) +
+  scale_y_discrete(labels = c(
+    "inst_mean" = "Institutional",
+    "comm_mean" = "Communication",
+    "trust_mean" = "Trust",
+    "valid_mean" = "Legitimacy and credibility"
+  )) +
+  scale_fill_manual(
+    name = "",
+    values = c("fisheries_scientists" = "#e8e64d", 
+               "marine_scientists" = "#d9927e"),
+    labels = c("fisheries_scientists" = "Fisheries agency scientists", 
+               "marine_scientists" = "University and conservation scientists"),
+  ) +
+  guides(fill = guide_legend(reverse = TRUE))+
+  labs(
+    x = "Mean score",
+    y = "Knowledge exchange barrier type"
+  ) +
+  theme_bw(base_size = 28) + 
+  theme(
+    panel.grid.major = element_blank(), 
+    panel.grid.minor = element_blank(),
+    axis.text.y = element_text(size = 28),
+    axis.title.x = element_text(size = 23)
+  )
+
+
 ###### stats tests 
 
 
