@@ -39,6 +39,7 @@ names(combined_data_positive)
 str(combined_data_positive)
 
 
+
 ###
 #######plots side by side
 ##
@@ -50,6 +51,15 @@ str(combined_data_positive)
 ## fisheries scientists
 str(trust)
 names(trust)
+
+##
+###rename: 
+colnames(trust)[2] <- "T1: Fishers trust that the professional knowledge they share with us scientists will not be shared with the wider public without their approval"
+colnames(trust)[3] <- "T2: Fishers are willing to share insights with me because they trust their knowledge will not be used against them"
+colnames(trust)[4] <- "T3: Fishers believe the scientific models we use are accurate"
+colnames(trust)[5] <- "T5: Fishers believe scientific models are free from political manipulation"
+colnames(trust)[6] <- "T4: Fishers trust us scientists to inform decision making without their input"
+
 #trust_fisheries_scientists <- trust[c(5:15),2:6]
 trust_fisheries_scientists <- trust[trust$institution == "fisheries_scientists", 2:6]
 names(trust_fisheries_scientists)
@@ -59,11 +69,11 @@ likt_fish <-  likert(trust_fisheries_scientists)
 
 names(trust_fisheries_scientists)
 p_fish <- plot(likt_fish, group.order = c(           
-                                            "Fishers trust that the professional knowledge they share with us scientists will not be shared with the wider public without their approval",                         
-                                            "Fishers are willing to share insights with me because they trust their knowledge will not be used against them",
-                                            "Fishers believe the scientific models we use are accurate",
-                                            "Fishers trust us scientists to inform decision making without their input",
-                                            "Fishers believe scientific models are free from political manipulation"),
+                                            "T1: Fishers trust that the professional knowledge they share with us scientists will not be shared with the wider public without their approval",                         
+                                            "T2: Fishers are willing to share insights with me because they trust their knowledge will not be used against them",
+                                            "T3: Fishers believe the scientific models we use are accurate",
+                                            "T4: Fishers trust us scientists to inform decision making without their input",
+                                            "T5: Fishers believe scientific models are free from political manipulation"),
                           text.size = 0)
 
 
@@ -77,11 +87,11 @@ trust_marine_scientists[1:5] <- lapply(trust_marine_scientists[1:5], factor, lev
 likt_marine <-  likert(trust_marine_scientists)
 names(trust_marine_scientists)
 p_marine <- plot(likt_marine, group.order = c(                           
-                                            "Fishers trust that the professional knowledge they share with us scientists will not be shared with the wider public without their approval",                         
-                                            "Fishers are willing to share insights with me because they trust their knowledge will not be used against them",
-                                            "Fishers believe the scientific models we use are accurate",
-                                            "Fishers trust us scientists to inform decision making without their input",
-                                            "Fishers believe scientific models are free from political manipulation"),
+                                            "T1: Fishers trust that the professional knowledge they share with us scientists will not be shared with the wider public without their approval",                         
+                                            "T2: Fishers are willing to share insights with me because they trust their knowledge will not be used against them",
+                                            "T3: Fishers believe the scientific models we use are accurate",
+                                            "T4: Fishers trust us scientists to inform decision making without their input",
+                                            "T5: Fishers believe scientific models are free from political manipulation"),
                               text.size = 0)
 
 
@@ -124,19 +134,26 @@ final_plot <- ggdraw(combined_plot) +
 
 ##
 ####valid knowledge
-#
-#
+
 
 ## fisheries scientists
 names(valid_knowledge)
+
+colnames(valid_knowledge)[2] <- "L1: Fishers anecdotal knowledge is useful as a basis for management"
+colnames(valid_knowledge)[3] <- "L2: Fishers have a strong sense of how to sustainably manage fisheries"
+colnames(valid_knowledge)[4] <- "L4: It is easy to discern knowledge from advocacy when engaging fishers"
+colnames(valid_knowledge)[5] <- "L3: Involving fishers does not compromise the independence of fisheries research and management"
+
+
+
 #valid_fisheries_scientists <- valid_knowledge[c(5:17),2:5]
 valid_fisheries_scientists <- valid_knowledge[valid_knowledge$institution == "fisheries_scientists", 2:5]
 valid_fisheries_scientists[1:4] <- lapply(valid_fisheries_scientists[1:4], factor, levels=1:11) 
 likt_fish <-  likert(valid_fisheries_scientists)
-p_fish <- plot(likt_fish, group.order = c( "Fishers anecdotal knowledge is useful as a basis for management",
-                                           "Fishers have a strong sense of how to sustainably manage fisheries",
-                                           "Involving fishers does not compromise the independence of fisheries research and management",
-                                           "It is easy to discern knowledge from advocacy when engaging fishers"),
+p_fish <- plot(likt_fish, group.order = c( "L1: Fishers anecdotal knowledge is useful as a basis for management",
+                                           "L2: Fishers have a strong sense of how to sustainably manage fisheries",
+                                           "L3: Involving fishers does not compromise the independence of fisheries research and management",
+                                           "L4: It is easy to discern knowledge from advocacy when engaging fishers"),
                text.size = 0)  
 
 ## marine scientists
@@ -146,11 +163,11 @@ valid_marine_scientists <- valid_knowledge[valid_knowledge$institution == "marin
 valid_marine_scientists[1:4] <- lapply(valid_marine_scientists[1:4], factor, levels=1:11) 
 likt_marine <-  likert(valid_marine_scientists)
 names(valid_marine_scientists)
-p_marine <- plot(likt_marine, group.order = c( "Fishers anecdotal knowledge is useful as a basis for management",
-                                               "Fishers have a strong sense of how to sustainably manage fisheries",
-                                               "Involving fishers does not compromise the independence of fisheries research and management",
-                                               "It is easy to discern knowledge from advocacy when engaging fishers"),
-                 text.size = 0)  
+p_marine <- plot(likt_marine, group.order = c( "L1: Fishers anecdotal knowledge is useful as a basis for management",
+                                               "L2: Fishers have a strong sense of how to sustainably manage fisheries",
+                                               "L3: Involving fishers does not compromise the independence of fisheries research and management",
+                                               "L4: It is easy to discern knowledge from advocacy when engaging fishers"),
+                 text.size = 0) 
 
 
 ##
@@ -196,17 +213,27 @@ final_plot <- ggdraw(combined_plot) +
 
 ## fisheries scientists
 names(institutional_resourcing)
+
+colnames(institutional_resourcing)[2] <- "I7: We have sufficient funding to effectively and regularly engage fishers"
+colnames(institutional_resourcing)[3] <- "I1: Engagement with fishers knowledge is a key part of my role" 
+colnames(institutional_resourcing)[4] <- "I3: My team have time to engage fishers" 
+colnames(institutional_resourcing)[5] <- "I4: My organisation encourages me to explore ways to incorporate fishers knowledge into management"
+colnames(institutional_resourcing)[6] <- "I5: My organisation's protocols support the inclusion of fishers' knowledge in research"
+colnames(institutional_resourcing)[7] <- "I2: Fishers are interested in participating in research" 
+colnames(institutional_resourcing)[8] <- "I6: Fishers have time to be involved in research projects" 
+
+
 #institut_fisheries_scientists <- institutional_resourcing[c(5:17),2:8]
 institut_fisheries_scientists <- institutional_resourcing[institutional_resourcing$institution == "fisheries_scientists", 2:8]
 institut_fisheries_scientists[1:7] <- lapply(institut_fisheries_scientists[1:7], factor, levels=1:11) 
 likt_fish <-  likert(institut_fisheries_scientists)
-p_fish <- plot(likt_fish, group.order = c( "Engagement with fishers knowledge is a key part of my role",
-                                            "Fishers are interested in participating in research",
-                                            "My team have time to engage fishers",
-                                            "My organisation encourages me to explore ways to incorporate fishers knowledge into management",                         
-                                            "My organisation's protocols support the inclusion of fishers' knowledge in research",                          
-                                            "Fishers have time to be involved in research projects",
-                                            "We have sufficient funding to effectively and regularly engage fishers"),
+p_fish <- plot(likt_fish, group.order = c( "I1: Engagement with fishers knowledge is a key part of my role",
+                                            "I2: Fishers are interested in participating in research",
+                                            "I3: My team have time to engage fishers",
+                                            "I4: My organisation encourages me to explore ways to incorporate fishers knowledge into management",                         
+                                            "I5: My organisation's protocols support the inclusion of fishers' knowledge in research",                          
+                                            "I6: Fishers have time to be involved in research projects",
+                                            "I7: We have sufficient funding to effectively and regularly engage fishers"),
                                         text.size = 0)
 
 
@@ -218,14 +245,14 @@ institut_marine_scientists <- institutional_resourcing[institutional_resourcing$
 institut_marine_scientists[1:7] <- lapply(institut_marine_scientists[1:7], factor, levels=1:11) 
 likt_marine <-  likert(institut_marine_scientists)
 names(institut_marine_scientists)
-p_marine <- plot(likt_marine, group.order = c( "Engagement with fishers knowledge is a key part of my role",
-                                               "Fishers are interested in participating in research",
-                                               "My team have time to engage fishers",
-                                               "My organisation encourages me to explore ways to incorporate fishers knowledge into management",                         
-                                               "My organisation's protocols support the inclusion of fishers' knowledge in research",                          
-                                               "Fishers have time to be involved in research projects",
-                                               "We have sufficient funding to effectively and regularly engage fishers"),
-                                              text.size = 0)
+p_marine <- plot(likt_marine, group.order = c( "I1: Engagement with fishers knowledge is a key part of my role",
+                                               "I2: Fishers are interested in participating in research",
+                                               "I3: My team have time to engage fishers",
+                                               "I4: My organisation encourages me to explore ways to incorporate fishers knowledge into management",                         
+                                               "I5: My organisation's protocols support the inclusion of fishers' knowledge in research",                          
+                                               "I6: Fishers have time to be involved in research projects",
+                                               "I7: We have sufficient funding to effectively and regularly engage fishers"),
+                 text.size = 0)
 
 
 ##
@@ -269,6 +296,16 @@ final_plot <- ggdraw(combined_plot) +
 
 ## fisheries scientists
 str(communication)
+colnames(communication)
+
+colnames(communication)[2] <- "C1: I have the expertise necessary to effectively communicate with fishers" 
+colnames(communication)[3] <- "C6: Fishers have a strong understanding of scientific language and approaches"
+colnames(communication)[4] <- "C4: Fishers are easy to get hold of"   
+colnames(communication)[5] <- "C2: I can easily understand the language used by fishers" 
+colnames(communication)[6] <- "C5: Fishers can easily articulate their knowledge to scientists"
+colnames(communication)[7] <- "C3: Fishers are approachable and easy to engage with"
+
+
 #comm_fisheries_scientists <- communication[c(5:17),2:7]
 comm_fisheries_scientists <- communication[communication$institution == "fisheries_scientists", 2:7]
 comm_fisheries_scientists[1:6] <- lapply(comm_fisheries_scientists[1:6], factor, levels=1:11) 
@@ -282,12 +319,12 @@ comm_marine_scientists <- communication[communication$institution == "marine_sci
 comm_marine_scientists[1:6] <- lapply(comm_marine_scientists[1:6], factor, levels=1:11) 
 likt_marine <-  likert(comm_marine_scientists)
 names(comm_marine_scientists)
-p_marine <- plot(likt_marine, group.order = c("I have the expertise necessary to effectively communicate with fishers",                            
-                                              "I can easily understand the language used by fishers",
-                                              "Fishers are approachable and easy to engage with",                         
-                                              "Fishers are easy to get hold of",                                
-                                              "Fishers can easily articulate their knowledge to scientists",                          
-                                              "Fishers have a strong understanding of scientific language and approaches"),
+p_marine <- plot(likt_marine, group.order = c("C1: I have the expertise necessary to effectively communicate with fishers",                            
+                                              "C2: I can easily understand the language used by fishers",
+                                              "C3: Fishers are approachable and easy to engage with",                         
+                                              "C4: Fishers are easy to get hold of",                                
+                                              "C5: Fishers can easily articulate their knowledge to scientists",                          
+                                              "C6: Fishers have a strong understanding of scientific language and approaches"),
                                             text.size = 0)
 
 
